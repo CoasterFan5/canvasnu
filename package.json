@@ -38,6 +38,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@fontsource-variable/work-sans": "^5.1.1",
 		"drizzle-orm": "^0.38.4",
 		"postgres": "^3.4.5",
 		"sass-embedded": "^1.85.0",
