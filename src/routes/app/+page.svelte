@@ -6,7 +6,7 @@
 
 	<div class="twoPaneWrap">
 		<div class="courses">
-			<div class="courseRecap">
+			<div class="courseRecap coolBorder">
 				<div class="chart">chart</div>
 				<div class="text">
 					<span>
@@ -81,30 +81,6 @@
 		position: relative;
 		background: var(--secondary);
 		padding: 0.5rem;
-
-		&::before {
-			content: '';
-			display: inline-block;
-			border-radius: inherit;
-			pointer-events: none;
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: calc(100% - 2px);
-			height: calc(100% - 2px);
-			inset: 0;
-			padding: 1px;
-			background: conic-gradient(from -100deg, transparent 0deg, white 20deg, transparent 200deg);
-			-webkit-mask:
-				linear-gradient(#fff 0 0) content-box,
-				linear-gradient(#fff 0 0);
-			mask:
-				linear-gradient(#fff 0 0) content-box,
-				linear-gradient(#fff 0 0);
-			-webkit-mask-composite: xor;
-			mask-composite: exclude;
-			opacity: 0.2;
-		}
 	}
 
 	.lightText {
