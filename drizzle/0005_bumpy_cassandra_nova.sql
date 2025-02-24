@@ -1,0 +1,1 @@
+ALTER TABLE "session" ALTER COLUMN "token" SET DATA TYPE varchar(256);

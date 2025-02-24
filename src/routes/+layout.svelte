@@ -2,9 +2,12 @@
 	let { children } = $props();
 
 	import '@fontsource-variable/inter';
+
+	import { Toaster } from 'svelte-french-toast';
 </script>
 
 <div class="wrap">
+	<Toaster />
 	{@render children()}
 </div>
 

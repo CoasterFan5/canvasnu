@@ -1,13 +1,45 @@
-<script>
+<script lang="ts">
+	import { enhance } from '$app/forms';
 	import BasicInput from '$lib/components/inputs/BasicInput.svelte';
+	import { createPromiseToast, handleToastPromiseWithFormAction } from '$lib/utils/toastManager';
+
+	let submitButton: HTMLButtonElement;
 </script>
 
 <div class="wrap">
-	<form class="container" autocomplete="off">
+	<form
+		class="container"
+		autocomplete="off"
+		method="post"
+		action="?/login"
+		use:enhance={() => {
+			const toastManager = createPromiseToast('Updating...');
+			return async ({ result, update }) => {
+				handleToastPromiseWithFormAction(result, toastManager, {
+					redirectsAreSuccess: true,
+					redirectMessage: 'Logged In'
+				});
+				await update();
+			};
+		}}
+	>
 		<h2>Onboarding</h2>
-		<BasicInput label={'Canvas URL:'} placeholder={'canvas.jmu.edu'} showEnter={false} />
+		<BasicInput
+			label={'Canvas URL:'}
+			placeholder={'canvas.jmu.edu'}
+			showEnter={false}
+			name="canvasUrl"
+		/>
 		<div class="spacer"></div>
-		<BasicInput label={'Access Token'} placeholder={'*****'} showEnter={true} secret={true} />
+		<BasicInput
+			label={'Access Token'}
+			placeholder={'*****'}
+			name="accessToken"
+			showEnter={true}
+			secret={true}
+		/>
+
+		<button bind:this={submitButton} hidden>Submit</button>
 	</form>
 </div>
 

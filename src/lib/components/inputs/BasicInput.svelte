@@ -3,6 +3,7 @@
 	export let placeholder = '';
 	export let showEnter = false;
 	export let secret = false;
+	export let name = '';
 	import EnterIcon from '~icons/ph/arrow-u-down-left';
 </script>
 
@@ -10,9 +11,9 @@
 	<span class="text">{label}</span>
 	<div class="wrap">
 		{#if secret}
-			<input {placeholder} type="password" />
+			<input {placeholder} {name} type="password" on:keypress />
 		{:else}
-			<input {placeholder} />
+			<input {placeholder} {name} on:keypress />
 		{/if}
 		{#if showEnter}
 			<div class="enterIcon">

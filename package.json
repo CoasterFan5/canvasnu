@@ -40,10 +40,13 @@
 	"dependencies": {
 		"@fontsource-variable/inter": "^5.1.1",
 		"@fontsource-variable/work-sans": "^5.1.1",
+		"@types/node": "^22.13.5",
 		"drizzle-orm": "^0.38.4",
 		"postgres": "^3.4.5",
 		"sass-embedded": "^1.85.0",
-		"unplugin-icons": "^22.1.0"
+		"svelte-french-toast": "^1.2.0",
+		"unplugin-icons": "^22.1.0",
+		"zod": "^3.24.2"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
