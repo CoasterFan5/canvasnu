@@ -1,6 +1,12 @@
+<script lang="ts">
+	import { fade } from 'svelte/transition';
+
+	let { data } = $props();
+</script>
+
 <div class="wrap">
 	<div class="header">
-		<h2 class="greeting">Hello, John</h2>
+		<h2 class="greeting">Hello, {data.firstName}</h2>
 		<h3>Class in 3 hours</h3>
 	</div>
 
@@ -21,7 +27,26 @@
 				</div>
 			</div>
 		</div>
-		<div class="right"></div>
+		<div class="right">
+			<h3>Courses</h3>
+			{#await data.courses}
+				loading...
+			{:then courseData}
+				{#if courseData}
+					{#each courseData as course, i}
+						<div
+							style="--courseColor: {course.course_color || '#ffffff'}"
+							class="courseWrap"
+							in:fade|global={{ delay: 15 * i, duration: 250 }}
+						>
+							{course.name}
+						</div>
+					{/each}
+				{:else}
+					Could not load course data.
+				{/if}
+			{/await}
+		</div>
 	</div>
 </div>
 
@@ -86,5 +111,12 @@
 	.lightText {
 		opacity: 0.7;
 		font-weight: 300;
+	}
+
+	.courseWrap {
+		display: flex;
+		border-left: 1px solid var(--courseColor);
+		padding: 0.25rem;
+		margin-bottom: 0.5rem;
 	}
 </style>
