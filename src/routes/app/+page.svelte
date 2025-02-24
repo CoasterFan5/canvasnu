@@ -2,6 +2,20 @@
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
+
+	let plannerList = $derived.by(async () => {
+		const plannerData = await data.planner;
+		if (!plannerData) {
+			return [];
+		}
+		return plannerData.filter((item) => {
+			const hasOverride = item.planner_override;
+			const hasSubmission =
+				item.submissions && (item.submissions.graded || item.submissions.submitted);
+
+			return !hasOverride && !hasSubmission;
+		});
+	});
 </script>
 
 <div class="wrap">
@@ -11,19 +25,41 @@
 	</div>
 
 	<div class="twoPaneWrap">
-		<div class="courses">
+		<div class="left">
 			<div class="courseRecap coolBorder">
-				<div class="chart">chart</div>
-				<div class="text">
-					<span>
-						5 <span class="lightText">Assingments due today</span>
-					</span>
-					<span>
-						7 <span class="lightText">Assingments due in the next 3 days</span>
-					</span>
-					<span>
-						21 <span class="lightText">Assingments due in the next 7 days</span>
-					</span>
+				<div class="upper">
+					<div class="chart">chart</div>
+					<div class="text">
+						<span>
+							5 <span class="lightText">Assingments overdue</span>
+						</span>
+						<span>
+							7 <span class="lightText">Assingments upcoming</span>
+						</span>
+						<span>
+							21 <span class="lightText">Assingments due eventually</span>
+						</span>
+					</div>
+				</div>
+				<div class="toDo">
+					{#await plannerList}
+						Loading planner...
+					{:then planner}
+						{#if planner}
+							{#each planner as plannerItem, i}
+								<div class="upcomingWrap">
+									<a
+										href="https://{data.canvasDomain}{plannerItem.html_url}"
+										class="upcoming"
+										target="_blank"
+										in:fade|global={{ delay: 10 * i, duration: 250 }}
+									>
+										{plannerItem.plannable.title}
+									</a>
+								</div>
+							{/each}
+						{/if}
+					{/await}
 				</div>
 			</div>
 		</div>
@@ -37,7 +73,7 @@
 						<div
 							style="--courseColor: {course.course_color || '#ffffff'}"
 							class="courseWrap"
-							in:fade|global={{ delay: 15 * i, duration: 250 }}
+							in:fade|global={{ delay: 10 * i, duration: 250 }}
 						>
 							{course.name}
 						</div>
@@ -63,6 +99,11 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		height: 100%;
+	}
+
+	.left {
+		width: 100%;
 		height: 100%;
 	}
 
@@ -106,6 +147,9 @@
 		position: relative;
 		background: var(--secondary);
 		padding: 0.5rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.lightText {
@@ -118,5 +162,33 @@
 		border-left: 1px solid var(--courseColor);
 		padding: 0.25rem;
 		margin-bottom: 0.5rem;
+	}
+
+	.upcomingWrap {
+		padding: 0.25rem;
+		width: 100%;
+		background: var(--tertiary);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	}
+
+	.upcoming {
+		display: inline-block;
+		color: var(--text75);
+		text-decoration: none;
+		width: 100%;
+
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		overflow-x: hidden;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 30rem;
+	}
+
+	.toDo {
+		overflow-y: auto;
+		scrollbar-width: none;
+		border-radius: 0.5rem;
 	}
 </style>

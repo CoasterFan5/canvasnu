@@ -10,6 +10,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 
 	return {
 		firstName: user.firstName,
-		lastName: user.lastName
+		lastName: user.lastName,
+		canvasDomain: user.canvas_domain
 	};
 };

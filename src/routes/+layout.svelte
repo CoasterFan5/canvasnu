@@ -1,8 +1,6 @@
 <script lang="ts">
 	let { children } = $props();
 
-	import '@fontsource-variable/inter';
-
 	import { Toaster } from 'svelte-french-toast';
 </script>
 
@@ -17,7 +15,16 @@
 		padding: 0;
 		background: var(--background);
 		color: var(--text);
-		font-family: 'inter';
+		font-family:
+			'inter',
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			Roboto,
+			Oxygen,
+			Ubuntu,
+			Cantarell,
+			sans-serif;
 
 		--text: rgb(241, 241, 241);
 		--text10: color-mix(in srgb, 10% var(--text), 90% transparent);
