@@ -36,13 +36,15 @@
 				{:then courseData}
 					{#if courseData}
 						{#each courseData as course, i}
-							<div
+							<a
+								href="https://{data.canvasDomain}/courses/{course.id}"
 								style="--courseColor: {course.course_color || '#ffffff'}"
 								class="courseWrap"
+								target="_blank"
 								in:fade|global={{ delay: 10 * i, duration: 250 }}
 							>
 								{course.name}
-							</div>
+							</a>
 						{/each}
 					{:else}
 						Could not load course data.
@@ -168,6 +170,8 @@
 	}
 
 	.courseWrap {
+		color: var(--text);
+		text-decoration: none;
 		display: flex;
 		border-radius: 0.5rem;
 		padding: 0.5rem;
