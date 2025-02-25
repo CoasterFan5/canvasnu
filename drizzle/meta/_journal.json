@@ -1,48 +1,48 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1740419000717,
-      "tag": "0000_omniscient_swordsman",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1740419329830,
-      "tag": "0001_secret_venom",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740419437856,
-      "tag": "0002_sticky_sunset_bain",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1740419462081,
-      "tag": "0003_mushy_goliath",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1740420993507,
-      "tag": "0004_bored_prima",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1740421047167,
-      "tag": "0005_bumpy_cassandra_nova",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1740419000717,
+			"tag": "0000_omniscient_swordsman",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1740419329830,
+			"tag": "0001_secret_venom",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1740419437856,
+			"tag": "0002_sticky_sunset_bain",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1740419462081,
+			"tag": "0003_mushy_goliath",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1740420993507,
+			"tag": "0004_bored_prima",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1740421047167,
+			"tag": "0005_bumpy_cassandra_nova",
+			"breakpoints": true
+		}
+	]
 }
