@@ -95,6 +95,7 @@ export const courseWithGradesObject = z.object({
 	blueprint: z.boolean(),
 	template: z.boolean(),
 	enrollments: z.array(courseEnrollmentWthGradeObject),
+	image_download_url: z.string().optional().nullable(),
 	hide_final_grades: z.boolean(),
 	workflow_state: z.string(),
 	restrict_enrollments_to_course_dates: z.boolean()

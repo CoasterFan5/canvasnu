@@ -37,13 +37,13 @@
 					{#if courseData}
 						{#each courseData as course, i}
 							<a
-								href="https://{data.canvasDomain}/courses/{course.id}"
-								style="--courseColor: {course.course_color || '#ffffff'}"
+								href="https://{data.canvasDomain}/courses/{course.externalId}"
+								style="--courseColor: {course.color || '#ffffff'}"
 								class="courseWrap"
 								target="_blank"
 								in:fade|global={{ delay: 10 * i, duration: 250 }}
 							>
-								{course.name}
+								{course.nickname}
 							</a>
 						{/each}
 					{:else}

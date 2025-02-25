@@ -1,4 +1,13 @@
-import { pgTable, serial, integer, date, varchar, boolean } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	date,
+	varchar,
+	boolean,
+	doublePrecision,
+	timestamp
+} from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
 	id: serial('id').primaryKey(),
@@ -14,10 +23,24 @@ export const user = pgTable('user', {
 	avatar_url: varchar({ length: 2048 }),
 	permissions_can_update_name: boolean(),
 	permissions_can_update_avatar: boolean(),
-	permissions_limit_parent_app_web_access: boolean()
+	permissions_limit_parent_app_web_access: boolean(),
+	lastCourseSync: timestamp()
 });
 
 export const sessionTable = pgTable('session', {
 	token: varchar({ length: 256 }).primaryKey(),
 	userId: integer()
+});
+
+export const coursesTable = pgTable('courses', {
+	courseId: serial('id').primaryKey(),
+	ownerId: integer().notNull(),
+	domain: varchar({ length: 256 }).notNull(),
+	externalId: integer('externalId').notNull(),
+	name: varchar({ length: 256 }).notNull(),
+	nickname: varchar({ length: 256 }),
+	image: varchar({ length: 2048 }),
+	color: varchar({ length: 20 }),
+	hidden: boolean(),
+	currentGrade: doublePrecision()
 });
