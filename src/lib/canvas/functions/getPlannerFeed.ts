@@ -1,10 +1,10 @@
 import { PlannerItemsResponseSchema } from '../zodResponseTypes/plannerSchemas';
 
-const FOURTEEN_DAYS = 14 * 24 * 60 * 60 * 1000;
+const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 export const getPlannerFeed = async (canvasDomain: string, accessToken: string) => {
-	const startDate = new Date(Date.now() - FOURTEEN_DAYS);
-	const url = `https://${canvasDomain}/api/v1/planner/items?per_page=100000&start_date=${startDate.toISOString()}&order=asc`;
+	const startDate = new Date(Date.now() - SEVEN_DAYS);
+	const url = `https://${canvasDomain}/api/v1/planner/items?per_page=100&start_date=${startDate.toISOString()}&order=asc`;
 
 	console.log(url);
 	const req = await fetch(url, {

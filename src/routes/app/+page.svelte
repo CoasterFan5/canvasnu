@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-
+	import dayjs from 'dayjs';
+	import RelativeTime from 'dayjs/plugin/relativeTime';
 	let { data } = $props();
+
+	dayjs.extend(RelativeTime);
 
 	let plannerList = $derived.by(async () => {
 		const plannerData = await data.planner;
@@ -26,7 +29,29 @@
 
 	<div class="twoPaneWrap">
 		<div class="left">
-			<div class="courseRecap coolBorder">
+			<div class="wrapLeft coolBorder">
+				<h3>Courses</h3>
+				{#await data.courses}
+					loading...
+				{:then courseData}
+					{#if courseData}
+						{#each courseData as course, i}
+							<div
+								style="--courseColor: {course.course_color || '#ffffff'}"
+								class="courseWrap"
+								in:fade|global={{ delay: 10 * i, duration: 250 }}
+							>
+								{course.name}
+							</div>
+						{/each}
+					{:else}
+						Could not load course data.
+					{/if}
+				{/await}
+			</div>
+		</div>
+		<div class="right">
+			<div class="rightWrap">
 				<div class="upper">
 					<div class="chart">chart</div>
 					<div class="text">
@@ -47,14 +72,15 @@
 					{:then planner}
 						{#if planner}
 							{#each planner as plannerItem, i}
-								<div class="upcomingWrap">
+								<div class="upcomingWrap coolBorder">
 									<a
 										href="https://{data.canvasDomain}{plannerItem.html_url}"
 										class="upcoming"
 										target="_blank"
 										in:fade|global={{ delay: 10 * i, duration: 250 }}
 									>
-										{plannerItem.plannable.title}
+										<span class="title">{plannerItem.plannable.title}</span>
+										<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
 									</a>
 								</div>
 							{/each}
@@ -62,26 +88,6 @@
 					{/await}
 				</div>
 			</div>
-		</div>
-		<div class="right">
-			<h3>Courses</h3>
-			{#await data.courses}
-				loading...
-			{:then courseData}
-				{#if courseData}
-					{#each courseData as course, i}
-						<div
-							style="--courseColor: {course.course_color || '#ffffff'}"
-							class="courseWrap"
-							in:fade|global={{ delay: 10 * i, duration: 250 }}
-						>
-							{course.name}
-						</div>
-					{/each}
-				{:else}
-					Could not load course data.
-				{/if}
-			{/await}
 		</div>
 	</div>
 </div>
@@ -107,14 +113,19 @@
 		height: 100%;
 	}
 
-	.right {
-		width: 100%;
+	.wrapLeft {
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		align-items: center;
 		background: var(--secondary);
+		border-radius: 0.5rem;
+		position: relative;
+		padding: 2rem;
+	}
+
+	.right {
+		width: 100%;
 		height: 100%;
-		border-radius: 1rem;
 	}
 	.greeting {
 		font-weight: 400;
@@ -141,15 +152,14 @@
 		width: 100%;
 	}
 
-	.courseRecap {
+	.rightWrap {
 		border-radius: 0.5rem;
 		background: transparent;
 		position: relative;
-		background: var(--secondary);
-		padding: 0.5rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		overflow-y: visible;
 	}
 
 	.lightText {
@@ -159,36 +169,41 @@
 
 	.courseWrap {
 		display: flex;
-		border-left: 1px solid var(--courseColor);
-		padding: 0.25rem;
+		border-radius: 0.5rem;
+		padding: 0.5rem;
 		margin-bottom: 0.5rem;
+		width: 100%;
 	}
 
 	.upcomingWrap {
-		padding: 0.25rem;
+		padding: 0.5rem;
 		width: 100%;
-		background: var(--tertiary);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		background: var(--secondary);
+		overflow-y: visible;
+		border-radius: 0.25rem;
+		position: relative;
 	}
 
 	.upcoming {
-		display: inline-block;
+		width: 100%;
 		color: var(--text75);
 		text-decoration: none;
-		width: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 
-		padding: 0.5rem;
-		border-radius: 0.5rem;
+	.title {
 		overflow-x: hidden;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		max-width: 30rem;
 	}
 
 	.toDo {
 		overflow-y: auto;
 		scrollbar-width: none;
-		border-radius: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
 	}
 </style>

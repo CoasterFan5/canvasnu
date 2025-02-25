@@ -22,7 +22,8 @@ const PlannerNoteSchema = z.object({
 		.string()
 		.url()
 		.describe('the Canvas web URL of the linked learning object'),
-	linked_object_url: z.string().url().describe('the API URL of the linked learning object')
+	linked_object_url: z.string().url().describe('the API URL of the linked learning object'),
+	due_at: z.coerce.date().optional().describe('Due date')
 });
 
 const PlannerOverrideSchema = z.object({
