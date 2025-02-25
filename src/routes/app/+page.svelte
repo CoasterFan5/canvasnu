@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import dayjs from 'dayjs';
 	import RelativeTime from 'dayjs/plugin/relativeTime';
+	import Course from './Course.svelte';
 	let { data } = $props();
 
 	dayjs.extend(RelativeTime);
@@ -29,63 +30,55 @@
 
 	<div class="twoPaneWrap">
 		<div class="left">
-			<div class="wrapLeft coolBorder">
-				<h3>Courses</h3>
-				{#await data.courses}
-					loading...
-				{:then courseData}
-					{#if courseData}
-						{#each courseData as course, i}
-							<a
-								href="https://{data.canvasDomain}/courses/{course.externalId}"
-								style="--courseColor: {course.color || '#ffffff'}"
-								class="courseWrap"
-								target="_blank"
-								in:fade|global={{ delay: 10 * i, duration: 250 }}
-							>
-								{course.nickname}
-							</a>
+			<div class="upper">
+				<div class="chart">chart</div>
+				<div class="text">
+					<span>
+						5 <span class="lightText">Assingments overdue</span>
+					</span>
+					<span>
+						7 <span class="lightText">Assingments upcoming</span>
+					</span>
+					<span>
+						21 <span class="lightText">Assingments due eventually</span>
+					</span>
+				</div>
+			</div>
+			<div class="toDo">
+				{#await plannerList}
+					Loading planner...
+				{:then planner}
+					{#if planner}
+						{#each planner as plannerItem, i}
+							<div class="upcomingWrap coolBorder">
+								<a
+									href="https://{data.canvasDomain}{plannerItem.html_url}"
+									class="upcoming"
+									target="_blank"
+									in:fade|global={{ delay: 10 * i, duration: 250 }}
+								>
+									<span class="title">{plannerItem.plannable.title}</span>
+									<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
+								</a>
+							</div>
 						{/each}
-					{:else}
-						Could not load course data.
 					{/if}
 				{/await}
 			</div>
 		</div>
 		<div class="right">
 			<div class="rightWrap">
-				<div class="upper">
-					<div class="chart">chart</div>
-					<div class="text">
-						<span>
-							5 <span class="lightText">Assingments overdue</span>
-						</span>
-						<span>
-							7 <span class="lightText">Assingments upcoming</span>
-						</span>
-						<span>
-							21 <span class="lightText">Assingments due eventually</span>
-						</span>
-					</div>
-				</div>
-				<div class="toDo">
-					{#await plannerList}
-						Loading planner...
-					{:then planner}
-						{#if planner}
-							{#each planner as plannerItem, i}
-								<div class="upcomingWrap coolBorder">
-									<a
-										href="https://{data.canvasDomain}{plannerItem.html_url}"
-										class="upcoming"
-										target="_blank"
-										in:fade|global={{ delay: 10 * i, duration: 250 }}
-									>
-										<span class="title">{plannerItem.plannable.title}</span>
-										<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
-									</a>
-								</div>
+				<div>
+					<h3>Courses</h3>
+					{#await data.courses}
+						loading...
+					{:then courseData}
+						{#if courseData}
+							{#each courseData as course, i}
+								<Course index={i} {course} canvasDomain={data.canvasDomain} />
 							{/each}
+						{:else}
+							Could not load course data.
 						{/if}
 					{/await}
 				</div>
@@ -167,16 +160,6 @@
 	.lightText {
 		opacity: 0.7;
 		font-weight: 300;
-	}
-
-	.courseWrap {
-		color: var(--text);
-		text-decoration: none;
-		display: flex;
-		border-radius: 0.5rem;
-		padding: 0.5rem;
-		margin-bottom: 0.5rem;
-		width: 100%;
 	}
 
 	.upcomingWrap {
