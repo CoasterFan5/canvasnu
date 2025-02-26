@@ -45,30 +45,34 @@
 						</span>
 					</div>
 				</div>
-				<div class="toDo">
-					{#await plannerList}
-						Loading planner...
-					{:then planner}
-						{#if planner}
-							{#each planner as plannerItem, i}
-								<div
-									class="upcomingWrap"
-									class:notFirst={i != 0}
-									class:notLast={i != planner.length - 1}
-								>
-									<a
-										href="https://{data.canvasDomain}{plannerItem.html_url}"
-										class="upcoming"
-										target="_blank"
-										in:fade|global={{ delay: 10 * i, duration: 250 }}
+				<div class="toDoWrap">
+					<div class="toDo">
+						{#await plannerList}
+							Loading planner...
+						{:then planner}
+							{#if planner}
+								{#each planner as plannerItem, i}
+									<div
+										class="upcomingWrap"
+										class:notFirst={i != 0}
+										class:notLast={i != planner.length - 1}
 									>
-										<span class="title">{plannerItem.plannable.title}</span>
-										<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
-									</a>
-								</div>
-							{/each}
-						{/if}
-					{/await}
+										<a
+											href="https://{data.canvasDomain}{plannerItem.html_url}"
+											class="upcoming"
+											target="_blank"
+											in:fade|global={{ delay: 10 * i, duration: 250 }}
+										>
+											<span class="title">{plannerItem.plannable.title}</span>
+											<span class="dueIn"
+												>Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span
+											>
+										</a>
+									</div>
+								{/each}
+							{/if}
+						{/await}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -187,16 +191,22 @@
 		text-overflow: ellipsis;
 	}
 
-	.toDo {
+	.toDoWrap {
 		overflow-y: auto;
-		scrollbar-width: none;
-		display: flex;
-		flex-direction: column;
-		padding: 0.5rem;
+		background-color: var(--tertiary);
 		border-radius: 0.5rem;
-		background: var(--tertiary);
 		border-top: 1px solid black;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.toDo {
+		scrollbar-width: none;
+		display: flex;
+		background-image: url('/noiseImage.svg');
+		background-color: var(--tertiary);
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		flex-direction: column;
 	}
 
 	.upcomingWrap {
@@ -204,6 +214,7 @@
 		width: 100%;
 		overflow-y: hidedn;
 		position: relative;
+
 		&.notLast {
 			border-bottom: 1px solid black;
 		}
