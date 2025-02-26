@@ -28,6 +28,8 @@
 
 		--text: rgb(241, 241, 241);
 		--text10: color-mix(in srgb, 10% var(--text), 90% transparent);
+		--text75: color-mix(in srgb, 75% var(--text), 10% transparent);
+
 		--background: #242220;
 		--tertiary: #1a1918;
 		--primary: rgb(251, 135, 2);

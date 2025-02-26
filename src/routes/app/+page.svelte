@@ -30,46 +30,51 @@
 
 	<div class="twoPaneWrap">
 		<div class="left">
-			<div class="upper">
-				<div class="chart">chart</div>
-				<div class="text">
-					<span>
-						5 <span class="lightText">Assingments overdue</span>
-					</span>
-					<span>
-						7 <span class="lightText">Assingments upcoming</span>
-					</span>
-					<span>
-						21 <span class="lightText">Assingments due eventually</span>
-					</span>
+			<div class="assignmentSummaryWrap">
+				<div class="upper">
+					<div class="chart">chart</div>
+					<div class="text">
+						<span>
+							5 <span class="lightText">Assingments overdue</span>
+						</span>
+						<span>
+							7 <span class="lightText">Assingments upcoming</span>
+						</span>
+						<span>
+							21 <span class="lightText">Assingments due eventually</span>
+						</span>
+					</div>
 				</div>
-			</div>
-			<div class="toDo">
-				{#await plannerList}
-					Loading planner...
-				{:then planner}
-					{#if planner}
-						{#each planner as plannerItem, i}
-							<div class="upcomingWrap coolBorder">
-								<a
-									href="https://{data.canvasDomain}{plannerItem.html_url}"
-									class="upcoming"
-									target="_blank"
-									in:fade|global={{ delay: 10 * i, duration: 250 }}
+				<div class="toDo">
+					{#await plannerList}
+						Loading planner...
+					{:then planner}
+						{#if planner}
+							{#each planner as plannerItem, i}
+								<div
+									class="upcomingWrap"
+									class:notFirst={i != 0}
+									class:notLast={i != planner.length - 1}
 								>
-									<span class="title">{plannerItem.plannable.title}</span>
-									<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
-								</a>
-							</div>
-						{/each}
-					{/if}
-				{/await}
+									<a
+										href="https://{data.canvasDomain}{plannerItem.html_url}"
+										class="upcoming"
+										target="_blank"
+										in:fade|global={{ delay: 10 * i, duration: 250 }}
+									>
+										<span class="title">{plannerItem.plannable.title}</span>
+										<span class="dueIn">Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span>
+									</a>
+								</div>
+							{/each}
+						{/if}
+					{/await}
+				</div>
 			</div>
 		</div>
 		<div class="right">
 			<div class="rightWrap">
 				<div>
-					<h3>Courses</h3>
 					{#await data.courses}
 						loading...
 					{:then courseData}
@@ -118,6 +123,19 @@
 		padding: 2rem;
 	}
 
+	.assignmentSummaryWrap {
+		height: 100%;
+		width: 100%;
+		background: var(--secondary);
+		padding: 1rem;
+		border-radius: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		max-height: 80vh;
+		overflow-x: hidden;
+	}
+
 	.right {
 		width: 100%;
 		height: 100%;
@@ -154,29 +172,12 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		overflow-y: visible;
+		overflow-y: hidden;
 	}
 
 	.lightText {
 		opacity: 0.7;
 		font-weight: 300;
-	}
-
-	.upcomingWrap {
-		padding: 0.5rem;
-		width: 100%;
-		background: var(--secondary);
-		overflow-y: visible;
-		border-radius: 0.25rem;
-		position: relative;
-	}
-
-	.upcoming {
-		width: 100%;
-		color: var(--text75);
-		text-decoration: none;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.title {
@@ -191,6 +192,33 @@
 		scrollbar-width: none;
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		background: var(--tertiary);
+		border-top: 1px solid black;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.upcomingWrap {
+		padding: 0.5rem;
+		width: 100%;
+		overflow-y: hidedn;
+		position: relative;
+		&.notLast {
+			border-bottom: 1px solid black;
+		}
+
+		&.notFirst {
+			border-top: 1px solid rgba(255, 255, 255, 0.05);
+		}
+	}
+
+	.upcoming {
+		width: 100%;
+		color: var(--text75);
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		font-size: 0.9rem;
 	}
 </style>
