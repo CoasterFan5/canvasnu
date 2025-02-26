@@ -16,8 +16,10 @@
 	let popOver: Popover;
 
 	import Popover from '$lib/components/popover/Popover.svelte';
+	import PopoverButton from '$lib/components/popover/PopoverButton.svelte';
 	import { fade } from 'svelte/transition';
 	import Nut from '~icons/ph/nut';
+	import HideIcon from '~icons/ph/eye';
 
 	const settingsClick = (e: MouseEvent) => {
 		e.preventDefault();
@@ -26,15 +28,15 @@
 </script>
 
 <Popover bind:this={popOver}>
-	<button> Hide Course </button>
-	<button> Change Color </button>
-	<button> Change Nickname</button>
+	<PopoverButton Icon={HideIcon}>Hide Course</PopoverButton>
+	<PopoverButton Icon={HideIcon}>Change Color</PopoverButton>
+	<PopoverButton Icon={HideIcon}>Change Nickname</PopoverButton>
 </Popover>
 
 <a
 	href="https://{canvasDomain}/courses/{course.externalId}"
 	style="--courseColor: {course.color || '#ffffff'}"
-	class="courseWrap coolBorder"
+	class="courseWrap"
 	target="_blank"
 	in:fade|global={{ delay: 25 * index, duration: 250 }}
 >

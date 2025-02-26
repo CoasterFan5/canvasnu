@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { quadInOut } from 'svelte/easing';
+	import { innerHeight } from 'svelte/reactivity/window';
 	import { fly } from 'svelte/transition';
 
 	let { children } = $props();
@@ -6,11 +8,16 @@
 	let yPos = $state(0);
 	let xPos = $state(0);
 
+	let width = $state(0);
+	let height = $state(0);
+
+	let initiatorWidth = $state(0);
+
 	let showing = $state(false);
 
 	export const propegateClick = (e: MouseEvent) => {
 		const t = e.currentTarget as HTMLHtmlElement;
-
+		initiatorWidth = t.clientWidth;
 		xPos = t.getBoundingClientRect().left + Math.floor(t.clientWidth);
 		yPos = t.getBoundingClientRect().top;
 		showing = true;
@@ -26,11 +33,14 @@
 {#if showing}
 	<button class="wrap" onclick={wrapClick}>
 		<div
+			bind:clientWidth={width}
+			bind:clientHeight={height}
 			class="holder coolBorder"
-			style="left: {xPos}px; top: {yPos}px;"
+			style="left:  {xPos - width - initiatorWidth}px; top: {yPos}px;"
 			in:fly={{
 				duration: 150,
-				y: 50
+				y: 50,
+				easing: quadInOut
 			}}
 		>
 			{@render children()}
@@ -49,10 +59,13 @@
 		outline: unset;
 		border: unset;
 		z-index: 250;
+		backdrop-filter: blur(2px);
 	}
 	.holder {
+		padding: 0.25rem;
 		position: fixed;
-		background: var(--tertiary);
+		backdrop-filter: blur(5px);
+		background: var(--background);
 		border-radius: 0.5rem;
 	}
 </style>

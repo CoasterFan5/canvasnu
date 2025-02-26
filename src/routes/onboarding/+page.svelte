@@ -28,6 +28,7 @@
 			label={'Canvas URL:'}
 			placeholder={'canvas.jmu.edu'}
 			showEnter={false}
+			secret={false}
 			name="canvasUrl"
 		/>
 		<div class="spacer"></div>

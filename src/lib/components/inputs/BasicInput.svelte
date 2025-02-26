@@ -1,9 +1,20 @@
 <script lang="ts">
-	export let label = '';
-	export let placeholder = '';
-	export let showEnter = false;
-	export let secret = false;
-	export let name = '';
+	let {
+		label,
+		placeholder,
+		showEnter,
+		secret,
+		name,
+		onClick
+	}: {
+		label: string;
+		placeholder: string;
+		showEnter: boolean;
+		secret: boolean;
+		name: string;
+		onClick?: (e: KeyboardEvent) => void;
+	} = $props();
+
 	import EnterIcon from '~icons/ph/arrow-u-down-left';
 </script>
 
@@ -11,9 +22,9 @@
 	<span class="text">{label}</span>
 	<div class="wrap">
 		{#if secret}
-			<input {placeholder} {name} type="password" on:keypress />
+			<input {placeholder} {name} type="password" onkeypress={onClick} />
 		{:else}
-			<input {placeholder} {name} on:keypress />
+			<input {placeholder} {name} onkeypress={onClick} />
 		{/if}
 		{#if showEnter}
 			<div class="enterIcon">
