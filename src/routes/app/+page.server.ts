@@ -56,6 +56,11 @@ export const actions = {
 					hidden: true
 				})
 				.where(eq(coursesTable.courseId, course.courseId));
+
+			return {
+				success: true,
+				message: 'Course hidden!'
+			};
 		}
 	)
 };
