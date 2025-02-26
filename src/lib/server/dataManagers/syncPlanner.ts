@@ -2,7 +2,6 @@ import { getFullPlannerFeed } from '$lib/canvas/functions/getFullPlannerFeed';
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
 import { assignmentTable, coursesTable, user } from '../db/schema';
-import crypto from 'crypto';
 
 export const syncPlanner = async (dbUser: typeof user.$inferSelect) => {
 	console.log(`Syncing planner`);
