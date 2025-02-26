@@ -24,9 +24,6 @@ export const syncPlanner = async (dbUser: typeof user.$inferSelect) => {
 
 	const fullPlannerData = await fullPlannerDataPromise;
 
-	const dataHash = crypto.hash('md5', JSON.stringify(fullPlannerData));
-	console.log(dataHash);
-
 	const queries = [];
 
 	if (!fullPlannerData) {
