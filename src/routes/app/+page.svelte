@@ -4,6 +4,8 @@
 	import RelativeTime from 'dayjs/plugin/relativeTime';
 	import Course from './Course.svelte';
 	let { data } = $props();
+	import { type EChartsOption } from 'echarts';
+	import AssignmentChart from './AssignmentChart.svelte';
 
 	dayjs.extend(RelativeTime);
 
@@ -20,6 +22,74 @@
 			return !hasOverride && !hasSubmission;
 		});
 	});
+
+	const dataAssignmentOptions = [
+		{
+			courseName: 'Math',
+			assignments: 2,
+			color: '#ffffff'
+		},
+		{
+			courseName: 'Science',
+			assignments: 3
+		},
+		{
+			courseName: 'History',
+			assignments: 5
+		},
+		{
+			courseName: 'English',
+			assignments: 1
+		}
+	];
+	const chartOptions: EChartsOption = {
+		tooltip: {
+			trigger: 'item'
+		},
+		legend: {
+			show: false,
+			top: '5%',
+			right: -50,
+			orient: 'vertical'
+		},
+		series: [
+			{
+				name: '7 Day Outlook',
+				type: 'pie',
+				radius: ['70%', '90%'],
+				avoidLabelOverlap: false,
+				itemStyle: {
+					borderRadius: 10,
+					borderColor: '#111110',
+					borderWidth: 10
+				},
+				label: {
+					show: false,
+					position: 'center'
+				},
+				emphasis: {
+					label: {
+						show: true,
+						fontSize: 20,
+						fontWeight: 'bold',
+						color: 'white'
+					}
+				},
+				labelLine: {
+					show: false
+				},
+				data: dataAssignmentOptions.map((item) => {
+					return {
+						value: item.assignments,
+						name: item.courseName,
+						itemStyle: {
+							color: item.color || 'white'
+						}
+					};
+				})
+			}
+		]
+	};
 </script>
 
 <div class="wrap">
@@ -32,23 +102,27 @@
 		<div class="left">
 			<div class="assignmentSummaryWrap">
 				<div class="upper">
-					<div class="chart">chart</div>
-					<div class="text">
-						<span>
-							5 <span class="lightText">Assingments overdue</span>
-						</span>
-						<span>
-							7 <span class="lightText">Assingments upcoming</span>
-						</span>
-						<span>
-							21 <span class="lightText">Assingments due eventually</span>
-						</span>
+					<div class="chartWrap">
+						<div class="chart"><AssignmentChart options={chartOptions} /></div>
 					</div>
 				</div>
 				<div class="toDoWrap">
 					<div class="toDo">
 						{#await plannerList}
-							Loading planner...
+							<div class="upcomingWrap" class:notFirst={false} class:notLast={true}>
+								<a
+									href="/#"
+									class="upcoming"
+									target="_blank"
+									in:fade|global={{ delay: 0, duration: 250 }}
+								>
+									<span class="title"
+										>This is a really long title for loading purposes to see if htis changes the
+										layout shift</span
+									>
+									<span class="dueIn">Loading...</span>
+								</a>
+							</div>
 						{:then planner}
 							{#if planner}
 								{#each planner as plannerItem, i}
@@ -113,8 +187,9 @@
 	}
 
 	.left {
-		width: 100%;
+		width: 50%;
 		height: 100%;
+		flex-grow: 1;
 	}
 
 	.wrapLeft {
@@ -141,8 +216,9 @@
 	}
 
 	.right {
-		width: 100%;
+		width: 50%;
 		height: 100%;
+		flex-grow: 1;
 	}
 	.greeting {
 		font-weight: 400;
@@ -192,7 +268,8 @@
 	}
 
 	.toDoWrap {
-		overflow-y: auto;
+		overflow-y: scroll;
+		scrollbar-width: none;
 		background-color: var(--tertiary);
 		border-radius: 0.5rem;
 		border-top: 1px solid black;
@@ -211,8 +288,9 @@
 
 	.upcomingWrap {
 		padding: 0.5rem;
+		box-sizing: border-box;
 		width: 100%;
-		overflow-y: hidedn;
+		overflow-y: hidden;
 		position: relative;
 
 		&.notLast {
@@ -231,5 +309,16 @@
 		display: flex;
 		flex-direction: column;
 		font-size: 0.9rem;
+		overflow-x: hidden;
+		max-width: 90%;
+	}
+
+	.chartWrap {
+		aspect-ratio: 2/1;
+	}
+
+	.chart {
+		height: 100%;
+		aspect-ratio: 1/1;
 	}
 </style>

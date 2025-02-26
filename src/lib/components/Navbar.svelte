@@ -67,7 +67,6 @@
 		&.active {
 			background: var(--accent);
 			box-shadow:
-				rgba(0, 0, 0, 0.24) 4px 16px 36px 0px,
 				rgba(255, 255, 255, 0.32) 0.5px 0.5px 0.5px 0px inset,
 				rgba(255, 255, 255, 0.05) 0.5px -0.5px 0.5px 0px inset;
 		}

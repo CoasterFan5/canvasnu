@@ -1,6 +1,7 @@
 <script lang="ts">
 	let { children } = $props();
 
+	import '@fontsource-variable/inter';
 	import { Toaster } from 'svelte-french-toast';
 </script>
 
