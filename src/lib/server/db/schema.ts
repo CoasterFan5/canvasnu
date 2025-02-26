@@ -6,7 +6,8 @@ import {
 	varchar,
 	boolean,
 	doublePrecision,
-	timestamp
+	timestamp,
+	unique
 } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
@@ -24,7 +25,8 @@ export const user = pgTable('user', {
 	permissions_can_update_name: boolean(),
 	permissions_can_update_avatar: boolean(),
 	permissions_limit_parent_app_web_access: boolean(),
-	lastCourseSync: timestamp()
+	lastCourseSync: timestamp(),
+	lastAssignmentSync: timestamp()
 });
 
 export const sessionTable = pgTable('session', {
@@ -44,3 +46,21 @@ export const coursesTable = pgTable('courses', {
 	hidden: boolean(),
 	currentGrade: doublePrecision()
 });
+
+export const assignmentTable = pgTable(
+	'assignments',
+	{
+		assignmentId: serial('id').primaryKey(),
+		ownerId: integer().notNull(),
+		externalId: integer('externalId').notNull(),
+		domain: varchar({ length: 256 }).notNull(),
+		externalUrl: varchar({ length: 256 }),
+		name: varchar({ length: 256 }).notNull(),
+		courseId: integer(),
+		externalCourseId: integer(),
+		dueDate: timestamp(),
+		grade: doublePrecision(),
+		submitted: boolean()
+	},
+	(t) => [unique('externalCompositeId').on(t.ownerId, t.externalId, t.domain)]
+);

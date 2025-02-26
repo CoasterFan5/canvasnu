@@ -1,13 +1,15 @@
 import { validateSession } from '$lib/server/validateSession';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getPlannerFeed } from '$lib/canvas/functions/getPlannerFeed';
 import { syncCourseData } from '$lib/server/dataManagers/syncCourseData';
 import { actionHelper } from '$lib/server/actionHelper';
 import { z } from 'zod';
 import { db } from '$lib/server/db';
-import { coursesTable } from '$lib/server/db/schema';
-import { and, eq } from 'drizzle-orm';
+import { assignmentTable, coursesTable } from '$lib/server/db/schema';
+import { and, asc, eq, isNull, or } from 'drizzle-orm';
+import { syncPlanner } from '$lib/server/dataManagers/syncPlanner';
+
+const TEN_MINUTES = 10 * 60 * 1000;
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const user = await validateSession(cookies.get('session'));
@@ -17,11 +19,25 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	}
 
 	const courses = syncCourseData(user);
-	const planner = getPlannerFeed(user.canvas_domain, user.access_token);
+
+	if (!user.lastAssignmentSync || user.lastAssignmentSync?.getTime() < Date.now() - TEN_MINUTES) {
+		await syncPlanner(user);
+	}
+
+	const assignmnets = db
+		.select()
+		.from(assignmentTable)
+		.where(
+			and(
+				eq(assignmentTable.ownerId, user.id),
+				or(eq(assignmentTable.submitted, false), isNull(assignmentTable.submitted))
+			)
+		)
+		.orderBy(asc(assignmentTable.dueDate));
 
 	return {
 		courses,
-		planner
+		assignmnets
 	};
 };
 

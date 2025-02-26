@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import dayjs from 'dayjs';
 	import RelativeTime from 'dayjs/plugin/relativeTime';
 	import Course from './Course.svelte';
@@ -8,20 +8,6 @@
 	import AssignmentChart from './AssignmentChart.svelte';
 
 	dayjs.extend(RelativeTime);
-
-	let plannerList = $derived.by(async () => {
-		const plannerData = await data.planner;
-		if (!plannerData) {
-			return [];
-		}
-		return plannerData.filter((item) => {
-			const hasOverride = item.planner_override;
-			const hasSubmission =
-				item.submissions && (item.submissions.graded || item.submissions.submitted);
-
-			return !hasOverride && !hasSubmission;
-		});
-	});
 
 	const dataAssignmentOptions = [
 		{
@@ -108,7 +94,7 @@
 				</div>
 				<div class="toDoWrap">
 					<div class="toDo">
-						{#await plannerList}
+						{#await data.assignmnets}
 							<div class="upcomingWrap" class:notFirst={false} class:notLast={true}>
 								<a
 									href="/#"
@@ -123,24 +109,22 @@
 									<span class="dueIn">Loading...</span>
 								</a>
 							</div>
-						{:then planner}
-							{#if planner}
-								{#each planner as plannerItem, i}
+						{:then assignments}
+							{#if assignments}
+								{#each assignments as assignment, i}
 									<div
 										class="upcomingWrap"
 										class:notFirst={i != 0}
-										class:notLast={i != planner.length - 1}
+										class:notLast={i != assignments.length - 1}
 									>
 										<a
-											href="https://{data.canvasDomain}{plannerItem.html_url}"
+											href="https://{data.canvasDomain}/courses/{assignment.externalCourseId}/assignments/{assignment.externalId}"
 											class="upcoming"
 											target="_blank"
-											in:fade|global={{ delay: 10 * i, duration: 250 }}
+											in:fly|global={{ delay: Math.min(50 * i, 500), duration: 250, x: 0, y: 20 }}
 										>
-											<span class="title">{plannerItem.plannable.title}</span>
-											<span class="dueIn"
-												>Due {dayjs().to(dayjs(plannerItem.plannable.due_at))}</span
-											>
+											<span class="title">{assignment.name}</span>
+											<span class="dueIn">Due {dayjs().to(dayjs(assignment.dueDate))}</span>
 										</a>
 									</div>
 								{/each}
