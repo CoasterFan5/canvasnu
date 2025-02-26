@@ -5,6 +5,8 @@ import crypto from 'crypto';
 
 type User = typeof user.$inferSelect;
 
+const THIRTHY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
 export const createSession = async (user: User, cookies: Cookies) => {
 	const sessionToken = crypto.randomBytes(128).toString('base64url');
 
@@ -19,7 +21,8 @@ export const createSession = async (user: User, cookies: Cookies) => {
 	cookies.set('session', sessionToken, {
 		path: '/',
 		secure: true,
-		sameSite: 'strict'
+		sameSite: 'strict',
+		expires: new Date(Date.now() + THIRTHY_DAYS)
 	});
 
 	return {
