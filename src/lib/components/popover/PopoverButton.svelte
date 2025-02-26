@@ -32,6 +32,7 @@
 		border: unset;
 		border-radius: 0.5rem;
 		cursor: pointer;
+		color: var(--text);
 
 		&:hover {
 			background: var(--primary10);

@@ -1,11 +1,13 @@
 <script lang="ts">
 	export let canvasDomain = '';
 	export let course: {
+		courseId: number;
 		nickname: string | null;
 		name: string;
 		externalId: number;
 		color: string | null;
 	} = {
+		courseId: 0,
 		nickname: null,
 		name: '',
 		externalId: 0,
@@ -19,7 +21,11 @@
 	import PopoverButton from '$lib/components/popover/PopoverButton.svelte';
 	import { fade } from 'svelte/transition';
 	import Nut from '~icons/ph/nut';
-	import HideIcon from '~icons/ph/eye';
+	import HideIcon from '~icons/ph/eye-slash';
+	import ChangeColor from '~icons/ph/palette';
+	import ChangeNickname from '~icons/ph/pencil-simple';
+	import { enhance } from '$app/forms';
+	import { createPromiseToast, handleToastPromiseWithFormAction } from '$lib/utils/toastManager';
 
 	const settingsClick = (e: MouseEvent) => {
 		e.preventDefault();
@@ -28,9 +34,26 @@
 </script>
 
 <Popover bind:this={popOver}>
-	<PopoverButton Icon={HideIcon}>Hide Course</PopoverButton>
-	<PopoverButton Icon={HideIcon}>Change Color</PopoverButton>
-	<PopoverButton Icon={HideIcon}>Change Nickname</PopoverButton>
+	<form
+		class="hiddenForm"
+		method="post"
+		action="?/hideCourse"
+		use:enhance={() => {
+			const toastManager = createPromiseToast('Hiding...');
+			return async ({ result, update }) => {
+				handleToastPromiseWithFormAction(result, toastManager, {
+					redirectsAreSuccess: true,
+					redirectMessage: 'Hidden'
+				});
+				await update();
+			};
+		}}
+	>
+		<input name="courseId" hidden value={course.courseId} />
+		<PopoverButton Icon={HideIcon}>Hide Course</PopoverButton>
+	</form>
+	<PopoverButton Icon={ChangeColor}>Change Color</PopoverButton>
+	<PopoverButton Icon={ChangeNickname}>Change Nickname</PopoverButton>
 </Popover>
 
 <a
@@ -91,5 +114,9 @@
 		&:hover {
 			opacity: 1;
 		}
+	}
+
+	.hiddenForm {
+		margin: 0;
 	}
 </style>

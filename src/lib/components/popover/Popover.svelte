@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { quadInOut } from 'svelte/easing';
-	import { innerHeight } from 'svelte/reactivity/window';
 	import { fly } from 'svelte/transition';
 
 	let { children } = $props();
@@ -9,7 +9,6 @@
 	let xPos = $state(0);
 
 	let width = $state(0);
-	let height = $state(0);
 
 	let initiatorWidth = $state(0);
 
@@ -28,13 +27,34 @@
 			showing = false;
 		}
 	};
+
+	const keyHandler = (e: KeyboardEvent) => {
+		if (e.key == 'Escape') {
+			console.log('exiting');
+			showing = false;
+			e.preventDefault();
+		}
+	};
+
+	$effect(() => {
+		if (document) {
+			if (showing) {
+				document.addEventListener('keydown', keyHandler);
+			} else {
+				document.removeEventListener('keydown', keyHandler);
+			}
+		}
+	});
+
+	onDestroy(() => {
+		document.removeEventListener('keydown', keyHandler);
+	});
 </script>
 
 {#if showing}
 	<button class="wrap" onclick={wrapClick}>
 		<div
 			bind:clientWidth={width}
-			bind:clientHeight={height}
 			class="holder coolBorder"
 			style="left:  {xPos - width - initiatorWidth}px; top: {yPos}px;"
 			in:fly={{
