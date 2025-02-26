@@ -118,7 +118,7 @@
 										class:notLast={i != assignments.length - 1}
 									>
 										<a
-											href="https://{data.canvasDomain}/courses/{assignment.externalCourseId}/assignments/{assignment.externalId}"
+											href="https://{data.canvasDomain}{assignment.externalUrl}"
 											class="upcoming"
 											target="_blank"
 											in:fly|global={{ delay: Math.min(50 * i, 500), duration: 250, x: 0, y: 20 }}
