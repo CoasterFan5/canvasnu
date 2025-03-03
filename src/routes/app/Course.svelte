@@ -35,6 +35,9 @@
 		popOver.propegateClick(e);
 	};
 
+	let colorInputElement: HTMLInputElement | undefined = $state();
+	let colorSubmitElement: HTMLButtonElement | undefined = $state();
+
 	let showingColorPicker = $state(false);
 
 	const openColorPicker = (e: MouseEvent) => {
@@ -43,8 +46,35 @@
 		colorPopOver.propegateClick(e);
 	};
 
+	const changeColor = (a: Color) => {
+		if (colorInputElement && colorSubmitElement) {
+			colorInputElement.value = a.getHslCode();
+			colorSubmitElement.click();
+		}
+	};
+
 	let c = new Color({ h: 0, s: 100, l: 50 });
 </script>
+
+<form
+	hidden
+	method="post"
+	action="?/changeColor"
+	use:enhance={() => {
+		const toastManager = createPromiseToast('Updating...');
+		return async ({ result, update }) => {
+			handleToastPromiseWithFormAction(result, toastManager, {
+				redirectsAreSuccess: true,
+				redirectMessage: 'Success'
+			});
+			await update();
+		};
+	}}
+>
+	<input hidden name="color" bind:this={colorInputElement} />
+	<input name="courseId" hidden value={course.courseId} />
+	<button hidden type="submit" aria-label="hidden" bind:this={colorSubmitElement}></button>
+</form>
 
 <Popover bind:this={popOver}>
 	<form
@@ -71,7 +101,7 @@
 
 <Popover bind:this={colorPopOver}>
 	{#if showingColorPicker}
-		<Colorpicker startColor={c} />
+		<Colorpicker input={changeColor} startColor={c} />
 	{/if}
 </Popover>
 
@@ -82,12 +112,14 @@
 	target="_blank"
 	in:fade|global={{ delay: 25 * index, duration: 250 }}
 >
-	<div class="title">{course.nickname || course.name}</div>
-	<div class="realName">{course.name}</div>
-	<div class="courseButtons">
-		<button class="nutButton" onclick={settingsClick}>
-			<Nut />
-		</button>
+	<div style="--c: {course.color};" class="courseInner">
+		<div class="title">{course.nickname || course.name}</div>
+		<div class="realName">{course.name}</div>
+		<div class="courseButtons">
+			<button class="nutButton" onclick={settingsClick}>
+				<Nut />
+			</button>
+		</div>
 	</div>
 </a>
 
@@ -98,12 +130,29 @@
 		display: flex;
 		flex-direction: column;
 		border-radius: 0.5rem;
-		padding: 1rem;
-		padding-bottom: 0.5rem;
-		padding-right: 0.5rem;
 		margin-bottom: 0.5rem;
 		width: 100%;
 		background: var(--secondary);
+		position: relative;
+	}
+
+	.courseInner {
+		color: var(--text);
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		padding-bottom: 0.5rem;
+		padding-right: 0.5rem;
+		width: 100%;
+		background-image: linear-gradient(
+			135deg,
+			var(--c) -20%,
+			transparent 10%,
+			transparent 90%,
+			var(--c) 120%
+		);
 		position: relative;
 	}
 

@@ -59,7 +59,7 @@ export const actions = {
 				.where(and(eq(coursesTable.courseId, courseId), eq(coursesTable.ownerId, user.id)));
 
 			if (courseList.length < 1) {
-				throw fail(401, {
+				return fail(401, {
 					message: 'No course.'
 				});
 			}
@@ -76,6 +76,45 @@ export const actions = {
 			return {
 				success: true,
 				message: 'Course hidden!'
+			};
+		}
+	),
+	changeColor: actionHelper(
+		z.object({
+			courseId: z.coerce.number(),
+			color: z.string()
+		}),
+		async ({ courseId, color }, { cookies }) => {
+			const user = await validateSession(cookies.get('session'));
+
+			if (!user) {
+				return;
+			}
+
+			const courseList = await db
+				.select()
+				.from(coursesTable)
+				.where(and(eq(coursesTable.courseId, courseId), eq(coursesTable.ownerId, user.id)));
+
+			if (courseList.length < 1) {
+				return fail(401, {
+					message: 'No course.'
+				});
+			}
+
+			const course = courseList[0];
+			console.log(color);
+
+			await db
+				.update(coursesTable)
+				.set({
+					color: color
+				})
+				.where(eq(coursesTable.courseId, course.courseId));
+
+			return {
+				success: true,
+				message: 'Course updated!'
 			};
 		}
 	)

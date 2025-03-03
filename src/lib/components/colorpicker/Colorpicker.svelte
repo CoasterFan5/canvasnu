@@ -75,8 +75,10 @@
 			}
 
 			timeout = window.setTimeout(() => {
-				let xPercent = Math.min(Math.max(e.clientX - startX, 0), width) / width;
-				let yPercent = 1 - Math.min(Math.max(e.clientY - startY, 0), height) / height;
+				let xPercent =
+					Math.round((Math.min(Math.max(e.clientX - startX, 0), width) / width) * 100) / 100;
+				let yPercent =
+					Math.round((1 - Math.min(Math.max(e.clientY - startY, 0), height) / height) * 100) / 100;
 
 				dotPos = {
 					x: xPercent,

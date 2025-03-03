@@ -42,7 +42,7 @@ export const coursesTable = pgTable('courses', {
 	name: varchar({ length: 256 }).notNull(),
 	nickname: varchar({ length: 256 }),
 	image: varchar({ length: 2048 }),
-	color: varchar({ length: 20 }),
+	color: varchar({ length: 32 }),
 	hidden: boolean(),
 	currentGrade: doublePrecision()
 });
