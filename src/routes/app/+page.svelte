@@ -105,10 +105,7 @@
 									target="_blank"
 									in:fade|global={{ delay: 0, duration: 250 }}
 								>
-									<span class="title"
-										>This is a really long title for loading purposes to see if htis changes the
-										layout shift</span
-									>
+									<span class="title">Loading Assignments...</span>
 									<span class="dueIn">Loading...</span>
 								</a>
 							</div>

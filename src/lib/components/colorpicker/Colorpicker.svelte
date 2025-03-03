@@ -2,36 +2,34 @@
 	import { Color } from './Color';
 	import ConfirmSymbol from '~icons/ph/check';
 	let {
-		color = $bindable(),
+		startColor = new Color({ h: 0, s: 0, l: 0 }),
 		input
 	}: {
-		color: Color;
-		input: (color: Color) => void;
+		startColor?: Color;
+		input?: (color: Color) => void;
 	} = $props();
+
+	let color = $state(startColor);
+
 	import type { FormEventHandler } from 'svelte/elements';
+	import { onMount } from 'svelte';
 
-	const createSwatches = (newColor: Color) => {
-		return [
-			newColor.getNewWithH(0),
-			newColor.getNewWithH(33),
-			newColor.getNewWithH(55),
-			newColor.getNewWithH(137),
-			newColor.getNewWithH(183),
-			newColor.getNewWithH(274),
-			newColor.getNewWithH(331)
-		];
-	};
-
-	let swatches = $state(createSwatches(color));
+	let sliderTimeout = 0;
 
 	const sliderInput: FormEventHandler<HTMLInputElement> = (e) => {
-		console.log(e);
-		color.setH(parseInt((e.currentTarget as HTMLInputElement).value || '0'));
-		color = color;
+		if (sliderTimeout) {
+			return;
+		}
+		sliderTimeout = window.setTimeout(() => {
+			color.setH(parseInt((e.target as HTMLInputElement)?.value || '0'));
+			color = color.clone();
+			sliderTimeout = 0;
+		}, 100);
 	};
 
 	let mouseDown = false;
 	let selectionGrid: HTMLDivElement | undefined = $state();
+	let colorPreviewElement: HTMLDivElement | undefined = $state();
 
 	const mouseUp = () => {
 		mouseDown = false;
@@ -51,60 +49,66 @@
 
 	let timeout = 0;
 
+	let startX = 0;
+	let startY = 0;
+	let width = 0;
+	let height = 0;
+	let gridInit = false;
+
+	onMount(() => {
+		selectionGrid = selectionGrid;
+	});
+
+	$effect(() => {
+		if (selectionGrid) {
+			startX = selectionGrid.getBoundingClientRect().x;
+			width = selectionGrid.clientWidth;
+
+			startY = selectionGrid.getBoundingClientRect().y;
+			height = selectionGrid.clientHeight;
+			gridInit = true;
+		}
+	});
+
+	$effect(() => {
+		if (colorPreviewElement) {
+			colorPreviewElement.style.background = color.getHslCode();
+		}
+	});
+
 	const selectionGridMove = (e: MouseEvent) => {
-		if (mouseDown && selectionGrid) {
-			const startX = selectionGrid.getBoundingClientRect().x;
-			const width = selectionGrid.clientWidth;
-
-			const startY = selectionGrid.getBoundingClientRect().y;
-			const height = selectionGrid.clientHeight;
-
-			let xPercent = Math.min(Math.max(e.clientX - startX, 0), width) / width;
-			let yPercent = 1 - Math.min(Math.max(e.clientY - startY, 0), height) / height;
-
-			dotPos = {
-				x: xPercent,
-				y: 1 - yPercent
-			};
-
+		if (mouseDown && gridInit) {
 			if (timeout) {
 				return;
 			}
 
 			timeout = window.setTimeout(() => {
-				console.log(xPercent, yPercent);
+				let xPercent = Math.min(Math.max(e.clientX - startX, 0), width) / width;
+				let yPercent = 1 - Math.min(Math.max(e.clientY - startY, 0), height) / height;
 
-				color.setS(xPercent * 100);
-				color.setL((yPercent - 0.5 * xPercent * yPercent) * 100);
-				color = color;
-				swatches = createSwatches(color);
+				dotPos = {
+					x: xPercent,
+					y: 1 - yPercent
+				};
 
 				timeout = 0;
-			}, 100);
+				color.setS(xPercent * 100);
+				color.setL((yPercent - 0.5 * xPercent * yPercent) * 100);
+				color = color.clone();
+			}, 16);
 		}
 	};
 
 	const dispatchInput = () => {
-		input(color);
+		if (input) {
+			input(color);
+		}
 	};
 </script>
 
 <svelte:document on:mouseup={mouseUp} onmousemove={selectionGridMove} />
 
-<div class="colorPicker coolBorder">
-	<div class="swatches">
-		{#each swatches as swatch}
-			<button
-				style="--c: {swatch.getHslCode()}"
-				aria-label="Color Swatch"
-				class="swatch"
-				onclick={() => {
-					color = swatch;
-				}}
-			>
-			</button>
-		{/each}
-	</div>
+<div class="colorPicker">
 	<div
 		style="--c: {color.getClosestFullColor().getHslCode()}"
 		class="selectionGrid"
@@ -122,9 +126,7 @@
 	</div>
 	<input class="rangeSelector" type="range" step="1" min={0} max={359} oninput={sliderInput} />
 	<div class="finalize">
-		{#key color}
-			<div style="--c: {color.getHslCode()}" class="colorPreview"></div>
-		{/key}
+		<div bind:this={colorPreviewElement} class="colorPreview"></div>
 		<button onclick={dispatchInput}>
 			<ConfirmSymbol />
 		</button>
@@ -135,7 +137,6 @@
 	.colorPicker {
 		display: flex;
 		flex-direction: column;
-		background: var(--tertiary);
 		padding: 1rem;
 		border-radius: 0.5rem;
 		position: relative;
@@ -155,7 +156,7 @@
 		height: 1.5rem;
 		width: 1.5rem;
 		border-radius: 100%;
-		transition: all cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.25s;
+		transition: scale cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.25s;
 		&:hover {
 			scale: 1.25;
 		}
@@ -208,6 +209,8 @@
 			position: absolute;
 			width: 6px;
 			height: 6px;
+			left: 0px;
+			top: 0px;
 			border-radius: 100%;
 			border: 2px solid black;
 		}
@@ -233,6 +236,7 @@
 			opacity: 0.75;
 			cursor: pointer;
 			transition: all cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.25s;
+			color: var(--text);
 
 			&:hover {
 				opacity: 1;

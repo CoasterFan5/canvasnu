@@ -40,4 +40,12 @@ export class Color {
 			l: 50
 		});
 	}
+
+	clone() {
+		return new Color({
+			h: this.h,
+			s: this.s,
+			l: this.l
+		});
+	}
 }

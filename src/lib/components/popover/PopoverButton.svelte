@@ -1,17 +1,19 @@
 <script lang="ts">
 	import type { Component, Snippet } from 'svelte';
-	import type { SvelteHTMLElements } from 'svelte/elements';
+	import type { MouseEventHandler, SvelteHTMLElements } from 'svelte/elements';
 
 	let {
 		children,
-		Icon
+		Icon,
+		onclick
 	}: {
 		children: Snippet;
 		Icon: Component<SvelteHTMLElements['svg']>;
+		onclick?: MouseEventHandler<HTMLButtonElement>;
 	} = $props();
 </script>
 
-<button class="popOverButton">
+<button class="popOverButton" {onclick}>
 	<div class="icon">
 		<Icon />
 	</div>

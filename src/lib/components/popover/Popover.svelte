@@ -52,7 +52,7 @@
 </script>
 
 {#if showing}
-	<button class="wrap" onclick={wrapClick}>
+	<button class="wrap" onmousedown={wrapClick}>
 		<div
 			bind:clientWidth={width}
 			class="holder coolBorder"
