@@ -1,7 +1,5 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
-	// Supports weights 100-900
-	import '@fontsource-variable/work-sans';
 
 	let { children } = $props();
 </script>

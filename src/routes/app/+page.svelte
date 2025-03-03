@@ -17,15 +17,18 @@
 		},
 		{
 			courseName: 'Science',
-			assignments: 3
+			assignments: 3,
+			color: 'rgba(255, 0, 0, 1)'
 		},
 		{
 			courseName: 'History',
-			assignments: 5
+			assignments: 5,
+			color: 'orange'
 		},
 		{
 			courseName: 'English',
-			assignments: 1
+			assignments: 1,
+			color: 'green'
 		}
 	];
 	const chartOptions: EChartsOption = {
@@ -69,7 +72,7 @@
 						value: item.assignments,
 						name: item.courseName,
 						itemStyle: {
-							color: item.color || 'white'
+							color: item.color || 'red'
 						}
 					};
 				})
