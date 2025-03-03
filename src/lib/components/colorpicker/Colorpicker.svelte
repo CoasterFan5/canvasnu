@@ -12,7 +12,6 @@
 	let color = $state(startColor);
 
 	import type { FormEventHandler } from 'svelte/elements';
-	import { onMount } from 'svelte';
 
 	let sliderTimeout = 0;
 
@@ -36,6 +35,14 @@
 	};
 
 	const selectionGridDown = () => {
+		if (selectionGrid) {
+			startX = selectionGrid.getBoundingClientRect().x;
+			width = selectionGrid.clientWidth;
+
+			startY = selectionGrid.getBoundingClientRect().y;
+			height = selectionGrid.clientHeight;
+			gridInit = true;
+		}
 		mouseDown = true;
 	};
 
@@ -54,21 +61,6 @@
 	let width = 0;
 	let height = 0;
 	let gridInit = false;
-
-	onMount(() => {
-		selectionGrid = selectionGrid;
-	});
-
-	$effect(() => {
-		if (selectionGrid) {
-			startX = selectionGrid.getBoundingClientRect().x;
-			width = selectionGrid.clientWidth;
-
-			startY = selectionGrid.getBoundingClientRect().y;
-			height = selectionGrid.clientHeight;
-			gridInit = true;
-		}
-	});
 
 	$effect(() => {
 		if (colorPreviewElement) {

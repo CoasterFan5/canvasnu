@@ -71,7 +71,7 @@
 
 <Popover bind:this={colorPopOver}>
 	{#if showingColorPicker}
-		<Colorpicker color={c} />
+		<Colorpicker startColor={c} />
 	{/if}
 </Popover>
 
