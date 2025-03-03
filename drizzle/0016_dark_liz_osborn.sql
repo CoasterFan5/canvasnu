@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ALTER COLUMN "color" SET DATA TYPE varchar(32);
