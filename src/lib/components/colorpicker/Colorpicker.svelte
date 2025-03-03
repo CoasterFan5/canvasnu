@@ -135,25 +135,6 @@
 		gap: 0.5rem;
 	}
 
-	.swatches {
-		display: flex;
-		flex-direction: row;
-		gap: 0.25rem;
-	}
-
-	.swatch {
-		all: unset;
-		cursor: pointer;
-		background: var(--c);
-		height: 1.5rem;
-		width: 1.5rem;
-		border-radius: 100%;
-		transition: scale cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.25s;
-		&:hover {
-			scale: 1.25;
-		}
-	}
-
 	.selectionGrid {
 		width: 100%;
 		aspect-ratio: 1/1;

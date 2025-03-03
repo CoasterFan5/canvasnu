@@ -163,27 +163,10 @@
 		width: 100%;
 	}
 
-	.courses {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-	}
-
 	.left {
 		width: 50%;
 		height: 100%;
 		flex-grow: 1;
-	}
-
-	.wrapLeft {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		background: var(--secondary);
-		border-radius: 0.5rem;
-		position: relative;
-		padding: 2rem;
 	}
 
 	.assignmentSummaryWrap {
@@ -237,11 +220,6 @@
 		display: flex;
 		flex-direction: column;
 		overflow-y: hidden;
-	}
-
-	.lightText {
-		opacity: 0.7;
-		font-weight: 300;
 	}
 
 	.title {
