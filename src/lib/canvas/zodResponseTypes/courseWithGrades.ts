@@ -93,7 +93,7 @@ export const courseWithGradesObject = z.object({
 	}),
 	time_zone: z.string(),
 	blueprint: z.boolean(),
-	template: z.boolean(),
+	template: z.boolean().optional(),
 	enrollments: z.array(courseEnrollmentWthGradeObject),
 	image_download_url: z.string().optional().nullable(),
 	hide_final_grades: z.boolean(),

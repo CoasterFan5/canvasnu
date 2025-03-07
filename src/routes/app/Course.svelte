@@ -106,7 +106,7 @@
 </Popover>
 
 <a
-	href="{canvasDomain}/courses/{course.externalId}"
+	href="https://{canvasDomain}/courses/{course.externalId}"
 	style="--courseColor: {course.color || '#ffffff'}"
 	class="courseWrap"
 	target="_blank"
