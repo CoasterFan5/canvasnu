@@ -67,6 +67,10 @@ export const actions = {
 				.where(and(eq(user.canvas_id, userData.id), eq(user.canvas_domain, canvasUrl)));
 
 			if (userCheck.length > 0) {
+				await db.update(user).set({
+					access_token: accessToken
+				});
+
 				await createSession(userCheck[0], cookies);
 
 				throw redirect(307, '/app');

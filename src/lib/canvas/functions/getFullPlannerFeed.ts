@@ -29,6 +29,7 @@ const parseBody = async (response: Response) => {
 	const body = await response.json();
 	const parsedBody = PlannerItemsResponseSchema.safeParse(body);
 	if (parsedBody.error) {
+		console.warn('Parsing error with planner feed');
 		for (const issue of parsedBody.error.issues) {
 			console.log(issue.message);
 			console.log(issue.code);

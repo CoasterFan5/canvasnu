@@ -10,7 +10,8 @@ export const validateSession = async (session: string | undefined) => {
 	const users = await db
 		.select()
 		.from(sessionTable)
-		.rightJoin(user, eq(sessionTable.userId, user.id));
+		.rightJoin(user, eq(sessionTable.userId, user.id))
+		.where(eq(sessionTable.token, session));
 
 	if (users.length < 1) {
 		return false;

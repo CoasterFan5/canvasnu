@@ -18,6 +18,8 @@ export const getCanvasCourses = async (canvasDomain: string, accessToken: string
 
 	const parsedBody = courseListWithGradesObject.safeParse(body);
 	if (parsedBody.error) {
+		console.warn('Course parse error');
+		console.log(body);
 		console.log(JSON.stringify(parsedBody.error.issues));
 	} else {
 		return parsedBody.data;
