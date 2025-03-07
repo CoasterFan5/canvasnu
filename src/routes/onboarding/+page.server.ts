@@ -38,13 +38,19 @@ export const actions = {
 			const responseFormed = zodResponseTypes.userObject.safeParse(response);
 
 			if (responseFormed.error) {
-				if (response?.errors[0].message == 'Invalid access token.') {
+				if (
+					response &&
+					response.errors &&
+					response.errors.length > 0 &&
+					response?.errors[0].message == 'Invalid access token.'
+				) {
 					return fail(401, {
 						success: false,
 						message: 'Invalid Access Token.'
 					});
 				}
 
+				console.log(response);
 				return fail(401, {
 					success: false,
 					message: 'Error parsing data.'
@@ -75,7 +81,7 @@ export const actions = {
 					createdAt: userData.created_at.toISOString(),
 					lastName: userData.last_name,
 					firstName: userData.first_name,
-					pronouns: userData.pronons,
+					pronouns: userData.pronouns,
 					locale: userData.locale,
 					effective_local: userData.effective_local,
 					avatar_url: userData.avatar_url,

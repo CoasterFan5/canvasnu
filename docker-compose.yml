@@ -8,3 +8,10 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: local
+  canvas: # https://codeberg.org/orlissenberg/canvas-lms-docker/src/branch/main/docker/Dockerfile
+    image: orlissenberg/canvas-lms
+    volumes:
+      - ./domain-config.yml:/opt/canvas/canvas-lms/config/domain.yml
+    ports:
+      - 8443:8443
+      - 3000:3000

@@ -67,9 +67,8 @@ export const userObject = z.object({
 	last_name: z.string(),
 	first_name: z.string(),
 	short_name: z.string().optional(),
-	pronons: z.string().optional(),
-	avatar_url: z.string(),
-	pronouns: z.string(),
+	pronouns: z.string().optional(),
+	avatar_url: z.string().optional(),
 	locale: z.string().nullable(),
 	effective_local: z.string().optional(),
 	permissions: z.object({
