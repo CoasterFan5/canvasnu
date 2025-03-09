@@ -1,10 +1,8 @@
 <script lang="ts">
 	let {
-		canvasDomain,
 		course,
 		index
 	}: {
-		canvasDomain: string;
 		course: {
 			courseId: number;
 			nickname: string | null;
@@ -106,10 +104,9 @@
 </Popover>
 
 <a
-	href="https://{canvasDomain}/courses/{course.externalId}"
+	href="app/courses/{course.courseId}"
 	style="--courseColor: {course.color || '#ffffff'}"
 	class="courseWrap"
-	target="_blank"
 	in:fade|global={{ delay: 25 * index, duration: 250 }}
 >
 	<div style="--c: {course.color};" class="courseInner">

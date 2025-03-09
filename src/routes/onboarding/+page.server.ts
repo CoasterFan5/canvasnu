@@ -25,13 +25,25 @@ export const actions = {
 				});
 			}
 
-			const fetchRequest = await fetch(canvasUrlBase.toString(), {
+			const fetchRequest: false | Response = await fetch(canvasUrlBase.toString(), {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 					'content-type': 'application/json'
 				},
 				method: 'get'
-			});
+			})
+				.then((e) => {
+					return e;
+				})
+				.catch(() => {
+					return false;
+				});
+
+			if (!fetchRequest) {
+				return fail(401, {
+					message: 'Invalid domain'
+				});
+			}
 
 			const response = await fetchRequest.json();
 

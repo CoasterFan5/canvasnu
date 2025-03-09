@@ -142,7 +142,7 @@
 					{:then courseData}
 						{#if courseData}
 							{#each courseData as course, i}
-								<Course index={i} {course} canvasDomain={data.canvasDomain} />
+								<Course index={i} {course} />
 							{/each}
 						{:else}
 							Could not load course data.
