@@ -49,8 +49,10 @@ export const syncPlanner = async (dbUser: typeof user.$inferSelect) => {
 						domain: dbUser.canvas_domain,
 						externalUrl: plannerItem.html_url,
 						externalId: plannerItem.plannable_id,
-						courseId: externalCourseIdToInterlaIdMap[plannerItem.plannable.course_id] || undefined,
-						externalCourseId: plannerItem.plannable.course_id,
+						courseId: plannerItem.course_id
+							? externalCourseIdToInterlaIdMap[plannerItem.course_id]
+							: undefined,
+						externalCourseId: plannerItem.course_id,
 						dueDate: new Date(plannerItem.plannable.due_at),
 						submitted: isSubmitted,
 						grade: 0
@@ -58,9 +60,18 @@ export const syncPlanner = async (dbUser: typeof user.$inferSelect) => {
 					.onConflictDoUpdate({
 						target: [assignmentTable.ownerId, assignmentTable.externalId, assignmentTable.domain],
 						set: {
-							grade: 0,
+							name: plannerItem.plannable.title,
+							ownerId: dbUser.id,
+							domain: dbUser.canvas_domain,
+							externalUrl: plannerItem.html_url,
+							externalId: plannerItem.plannable_id,
+							courseId: plannerItem.course_id
+								? externalCourseIdToInterlaIdMap[plannerItem.course_id]
+								: undefined,
+							externalCourseId: plannerItem.course_id,
 							dueDate: new Date(plannerItem.plannable.due_at),
-							submitted: isSubmitted
+							submitted: isSubmitted,
+							grade: 0
 						}
 					})
 			);

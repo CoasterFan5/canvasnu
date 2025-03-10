@@ -27,8 +27,8 @@
 			icon: HomeIcon
 		},
 		{
-			href: `https://${data.canvasDomain}/courses/${data.course.externalId}/assignments`,
-			newTab: true,
+			href: `/app/courses/${data.course.courseId}/assignments`,
+			newTab: false,
 			icon: AssignmentIcon
 		},
 		{
@@ -73,8 +73,10 @@
 <style lang="scss">
 	.wrap {
 		width: 100%;
-		padding: 0% 20%;
+		padding: 0% 10%;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.tools {
@@ -83,6 +85,7 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
+		margin-bottom: 1rem;
 	}
 
 	.right,
