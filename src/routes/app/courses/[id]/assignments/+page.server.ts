@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { assignmentTable } from '$lib/server/db/schema';
-import { and, eq, gt } from 'drizzle-orm';
+import { and, asc, eq, gt } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { logManager } from '$lib/server/logManager/logManager';
 
@@ -23,12 +23,14 @@ export const load: PageServerLoad = async ({ parent }) => {
 				eq(assignmentTable.submitted, false),
 				gt(assignmentTable.dueDate, new Date(Date.now() - SEVEN_DAYS))
 			)
-		);
+		)
+		.orderBy(asc(assignmentTable.dueDate));
 
 	const allAssignmentsPromise = db
 		.select()
 		.from(assignmentTable)
-		.where(eq(assignmentTable.courseId, parentData.course.courseId));
+		.where(eq(assignmentTable.courseId, parentData.course.courseId))
+		.orderBy(asc(assignmentTable.dueDate));
 
 	const upComingAssignments = await upComingAssignmentsPromise;
 	const allAssignments = await allAssignmentsPromise;
