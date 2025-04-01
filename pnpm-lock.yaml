@@ -46,6 +46,9 @@ importers:
       '@types/events':
         specifier: ^3.0.3
         version: 3.0.3
+      esbuild:
+        specifier: 0.25.2
+        version: 0.25.2
 
   apps/web:
     dependencies:

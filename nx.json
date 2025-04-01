@@ -2,12 +2,8 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
     "test": {
@@ -15,6 +11,9 @@
     },
     "lint": {
       "cache": true
+    },
+    "migrte": {
+      "cache": false
     }
   },
   "nxCloudId": "67ebe513adaeb26f958ce66f"

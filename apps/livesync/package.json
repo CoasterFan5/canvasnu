@@ -2,10 +2,13 @@
   "name": "livesync",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
+  "module": "es2022",
   "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx watch ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsx build.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,13 +16,14 @@
   "dependencies": {
     "@trpc/client": "^11.0.1",
     "@trpc/server": "^11.0.1",
-    "database": "workspace:*",
     "canvas": "workspace:*",
+    "database": "workspace:*",
     "events": "^3.3.0",
     "tsx": "^4.19.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/events": "^3.0.3"
+    "@types/events": "^3.0.3",
+    "esbuild": "0.25.2"
   }
 }
