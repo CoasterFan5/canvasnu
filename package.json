@@ -21,5 +21,8 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
+  },
+  "devDependencies": {
+    "nx": "20.7.0"
   }
 }
