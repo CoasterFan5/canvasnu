@@ -7,8 +7,10 @@ import { db } from 'database';
 import { assignmentTable, coursesTable } from 'database';
 import { and, asc, eq, isNull, or } from 'database';
 import { dataManagers } from 'canvas';
+import { logManager } from '$lib/server/logManager/logManager';
 
 const TEN_MINUTES = 10 * 60 * 1000;
+const SIXTY_MINUTES = 6 * TEN_MINUTES;
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const user = await validateSession(cookies.get('session'));
@@ -19,7 +21,12 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
 	const courses = dataManagers.syncCourseData(user);
 
-	if (!user.lastAssignmentSync || user.lastAssignmentSync?.getTime() < Date.now() - TEN_MINUTES) {
+	if (!user.lastAssignmentSync || user.lastAssignmentSync?.getTime() < Date.now() - SIXTY_MINUTES) {
+		logManager.log({
+			type: 'warn',
+			message: 'Planner just synced from web app',
+			alert: true
+		});
 		await dataManagers.syncPlanner(user);
 	}
 
