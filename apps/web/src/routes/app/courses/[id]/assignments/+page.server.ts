@@ -2,17 +2,10 @@ import { db } from 'database';
 import { assignmentTable } from 'database';
 import { and, asc, eq, gt } from 'database';
 import type { PageServerLoad } from './$types';
-import { logManager } from '$lib/server/logManager/logManager';
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 export const load: PageServerLoad = async ({ parent }) => {
-	logManager.log({
-		type: 'info',
-		message: 'Assignments load',
-		alert: false
-	});
-
 	const parentData = await parent();
 	const upComingAssignmentsPromise = db
 		.select()
