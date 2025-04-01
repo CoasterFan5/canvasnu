@@ -2,7 +2,13 @@ import * as esbuild from "esbuild";
 
 await esbuild.build({
   entryPoints: ["./src/index.ts"],
+  bundle: true,
+  minify: false,
   outdir: "./dist",
-  target: "es2020",
   platform: "node",
+  format: "esm",
+  target: "esnext",
+  banner: {
+    js: 'import { createRequire } from "module";const require = createRequire(import.meta.url);',
+  },
 });
