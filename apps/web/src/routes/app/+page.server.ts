@@ -1,13 +1,12 @@
 import { validateSession } from '$lib/server/validateSession';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { syncCourseData } from '$lib/server/dataManagers/syncCourseData';
 import { actionHelper } from '$lib/server/actionHelper';
 import { z } from 'zod';
 import { db } from 'database';
 import { assignmentTable, coursesTable } from 'database';
 import { and, asc, eq, isNull, or } from 'database';
-import { syncPlanner } from '$lib/server/dataManagers/syncPlanner';
+import { dataManagers } from 'canvas';
 
 const TEN_MINUTES = 10 * 60 * 1000;
 
@@ -18,10 +17,10 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		throw redirect(307, '/onboarding');
 	}
 
-	const courses = syncCourseData(user);
+	const courses = dataManagers.syncCourseData(user);
 
 	if (!user.lastAssignmentSync || user.lastAssignmentSync?.getTime() < Date.now() - TEN_MINUTES) {
-		await syncPlanner(user);
+		await dataManagers.syncPlanner(user);
 	}
 
 	const assignmnets = db

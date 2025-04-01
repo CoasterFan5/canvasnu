@@ -1,9 +1,9 @@
-import { zodResponseTypes } from '$lib/canvas';
 import { actionHelper } from '$lib/server/actionHelper';
 import { createSession } from '$lib/server/createSession';
 import { db, and, eq, user } from 'database';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
+import { zodObjects } from 'canvas';
 
 export const actions = {
 	login: actionHelper(
@@ -45,7 +45,7 @@ export const actions = {
 
 			const response = await fetchRequest.json();
 
-			const responseFormed = zodResponseTypes.userObject.safeParse(response);
+			const responseFormed = zodObjects.userObject.safeParse(response);
 
 			if (responseFormed.error) {
 				if (
