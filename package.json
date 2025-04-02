@@ -8,6 +8,7 @@
     "dev": "dotenvx run -- pnpm --parallel --filter \"./apps/**\" run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx nx run-many -t format",
+    "studio": "npx nx run database:studio",
     "db:generate": "dotenvx run -- pnpm --filter \"./packages/database/\" run generate",
     "db:migrate": "dotenvx run -- pnpm --filter \"./packages/database/\" run migrate"
   },
