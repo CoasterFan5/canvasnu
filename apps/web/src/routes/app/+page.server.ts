@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		logManager.log({
 			type: 'warn',
 			message: 'Planner just synced from web app',
-			alert: true
+			alert: false
 		});
 		await dataManagers.syncPlanner(user);
 	}
