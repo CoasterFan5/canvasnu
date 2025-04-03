@@ -8,7 +8,7 @@ export const getAssignmentsForCourse = async (
   courseId: number,
 ) => {
   const url = new URL(
-    `https://${domain}/api/v1/courses/${courseId}/assignments?per_page=1000`,
+    `https://${domain}/api/v1/courses/${courseId}/assignments?per_page=1000&include[]=submission`,
   );
 
   const assignments = await getPaginatedDataFromUrl(

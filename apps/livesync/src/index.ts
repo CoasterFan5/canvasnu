@@ -88,7 +88,9 @@ setInterval(async () => {
             externalCourseId: assignment.course_id,
             dueDate: assignment.due_at ? new Date(assignment.due_at) : null,
             grade: 0,
-            submitted: assignment.has_submitted_submissions,
+            submitted:
+              assignment.submission?.workflow_state !== "unsubmitted" ||
+              assignment.locked_for_user,
             description: assignment.description,
           })
           .onConflictDoUpdate({
@@ -98,9 +100,11 @@ setInterval(async () => {
               coursesTable.domain,
             ],
             set: {
-              dueDate: new Date(assignment.due_at || 0),
+              dueDate: assignment.due_at ? new Date(assignment.due_at) : null,
               grade: 0,
-              submitted: assignment.has_submitted_submissions,
+              submitted:
+                assignment.submission?.workflow_state !== "unsubmitted" ||
+                assignment.locked_for_user,
               courseId: courseMap[assignment.course_id],
               description: assignment.description,
             },

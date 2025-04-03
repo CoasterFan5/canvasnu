@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { actionHelper } from '$lib/server/actionHelper';
 import { z } from 'zod';
-import { db } from 'database';
+import { db, isNotNull } from 'database';
 import { assignmentTable, coursesTable } from 'database';
 import { and, asc, eq, isNull, or } from 'database';
 import { dataManagers } from 'canvas';
@@ -36,6 +36,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		.where(
 			and(
 				eq(assignmentTable.ownerId, user.id),
+				isNotNull(assignmentTable.dueDate),
 				or(eq(assignmentTable.submitted, false), isNull(assignmentTable.submitted))
 			)
 		)

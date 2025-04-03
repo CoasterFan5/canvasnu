@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { submissionSchema } from "./submissionSchemas";
 
 const ExternalToolTagAttributesSchema = z
   .object({
@@ -175,7 +176,7 @@ export const AssignmentSchema = z.object({
       ]),
     )
     .optional(),
-  submission: z.any().optional().nullable(),
+  submission: submissionSchema.optional().nullable(),
   use_rubric_for_grading: z.boolean().optional(),
   rubric_settings: z
     .object({ points_possible: z.number().optional().nullable() })
