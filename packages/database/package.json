@@ -5,6 +5,7 @@
   "description": "",
   "main": "./src/index.ts",
   "scripts": {
+    "dev": "npx drizzle-kit studio",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "npx drizzle-kit generate",
     "migrate": "npx drizzle-kit migrate",

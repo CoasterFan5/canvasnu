@@ -118,7 +118,7 @@
 										class:notLast={i != assignments.length - 1}
 									>
 										<a
-											href="https://{data.canvasDomain}{assignment.externalUrl}"
+											href={assignment.externalUrl}
 											class="upcoming"
 											target="_blank"
 											in:fly|global={{ delay: Math.min(50 * i, 500), duration: 250, x: 0, y: 20 }}
@@ -136,7 +136,7 @@
 		</div>
 		<div class="right">
 			<div class="rightWrap">
-				<div>
+				<div class="courseList">
 					{#await data.courses}
 						loading...
 					{:then courseData}
@@ -219,7 +219,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		overflow-y: hidden;
+		overflow-y: auto;
 	}
 
 	.title {

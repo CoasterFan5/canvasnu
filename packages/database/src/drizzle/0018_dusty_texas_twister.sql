@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ADD CONSTRAINT "externalCompositeIdCourses" UNIQUE("ownerId","externalId","domain");

@@ -30,6 +30,9 @@ importers:
       canvas:
         specifier: workspace:*
         version: link:../../packages/canvas
+      clmssdkts:
+        specifier: ^1.0.4
+        version: 1.0.4
       database:
         specifier: workspace:*
         version: link:../../packages/database
@@ -1233,6 +1236,9 @@ packages:
 
   clmssdkts@1.0.2:
     resolution: {integrity: sha512-FoOG3HbC+U9rhMs6j3kZp1ebv8qRKrHCMAcE0JLvp7nqieaTF/CIeCnChxkc87CcW8FxFw0oN7Xay1ujAb7cVg==}
+
+  clmssdkts@1.0.4:
+    resolution: {integrity: sha512-i6eHAzK2Ru0HIFvT7aqRQjihSvwPyDxPUmLSs/IJOXop91A8BoQ/k5BFbwtpco52IglcGSIuvuNCS/nvq1kKSQ==}
 
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
@@ -3435,6 +3441,8 @@ snapshots:
       wrap-ansi: 7.0.0
 
   clmssdkts@1.0.2: {}
+
+  clmssdkts@1.0.4: {}
 
   clone@1.0.4: {}
 

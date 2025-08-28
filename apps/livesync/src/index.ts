@@ -11,7 +11,7 @@ import {
   or,
   user,
 } from "database";
-import * as canvas from "canvas";
+import { CanvasLMS } from "clmssdkts";
 
 const SIXTY_SECONDS = 60 * 1000;
 const TEN_MINUTES = 10 * SIXTY_SECONDS;
@@ -50,66 +50,87 @@ setInterval(async () => {
     const startTime = Date.now();
     console.log(`Performing sync of ${u.firstName} ${u.lastName}`);
 
-    const courseAssignmentsPromise = canvas.functions.getCourseAssignments(
-      u.canvas_domain,
-      u.access_token,
-    );
+    const canvas = new CanvasLMS({
+      domain: `https://${u.canvas_domain}/api`,
+      accessToken: u.access_token,
+    });
 
-    const courses = await db
-      .select({
-        externalId: coursesTable.externalId,
-        id: coursesTable.courseId,
-      })
-      .from(coursesTable)
-      .where(eq(coursesTable.ownerId, u.id));
-
-    // maps external to internal id
-    const courseMap: {
-      [key: number]: number;
-    } = {};
-    for (const c of courses) {
-      courseMap[c.externalId] = c.id;
+    const courses = await canvas.listYourCourses({});
+    if (!courses) {
+      continue;
     }
 
-    const courseAssignments = await courseAssignmentsPromise;
     const dbPromises = [];
 
-    for (const assignment of courseAssignments) {
-      dbPromises.push(
-        db
-          .insert(assignmentTable)
-          .values({
-            ownerId: u.id,
-            externalId: assignment.id,
-            domain: u.canvas_domain,
-            externalUrl: assignment.html_url,
-            name: assignment.name,
-            courseId: courseMap[assignment.course_id],
-            externalCourseId: assignment.course_id,
-            dueDate: assignment.due_at ? new Date(assignment.due_at) : null,
-            grade: 0,
-            submitted:
-              assignment.submission?.workflow_state !== "unsubmitted" ||
-              assignment.locked_for_user,
-            description: assignment.description,
-          })
-          .onConflictDoUpdate({
-            target: [
-              coursesTable.externalId,
-              coursesTable.ownerId,
-              coursesTable.domain,
-            ],
-            set: {
+    for (const c of courses) {
+      const newCourse = await db
+        .insert(coursesTable)
+        .values({
+          ownerId: u.id,
+          domain: u.canvas_domain,
+          externalId: c.id,
+          name: c.name,
+        })
+        .onConflictDoUpdate({
+          target: [
+            coursesTable.ownerId,
+            coursesTable.externalId,
+            coursesTable.domain,
+          ],
+          set: {
+            name: c.name,
+          },
+        })
+        .returning();
+
+      // also get the courses
+      const courseAssignments = await canvas.listAssignmentsAssignments({
+        course_id: c.id.toString(),
+      });
+
+      if (!courseAssignments) {
+        continue;
+      }
+
+      for (const assignment of courseAssignments) {
+        dbPromises.push(
+          db
+            .insert(assignmentTable)
+            .values({
+              ownerId: u.id,
+              externalId: assignment.id,
+              domain: u.canvas_domain,
+              externalUrl: assignment.html_url,
+              name: assignment.name,
+              courseId: newCourse[0].courseId,
+              externalCourseId: assignment.course_id,
               dueDate: assignment.due_at ? new Date(assignment.due_at) : null,
               grade: 0,
               submitted:
-                assignment.submission?.workflow_state !== "unsubmitted" ||
-                assignment.locked_for_user,
-              courseId: courseMap[assignment.course_id],
+                assignment.has_submitted_submissions ||
+                assignment.locked_for_user ||
+                assignment.graded_submissions_exist,
               description: assignment.description,
-            },
-          }),
-      );
+            })
+            .onConflictDoUpdate({
+              target: [
+                coursesTable.externalId,
+                coursesTable.ownerId,
+                coursesTable.domain,
+              ],
+              set: {
+                dueDate: assignment.due_at ? new Date(assignment.due_at) : null,
+                grade: 0,
+                submitted:
+                  assignment.has_submitted_submissions ||
+                  assignment.locked_for_user ||
+                  assignment.graded_submissions_exist,
+                courseId: newCourse[0].courseId,
+                description: assignment.description,
+              },
+            }),
+        );
+      }
     }
 
     await Promise.all(dbPromises);

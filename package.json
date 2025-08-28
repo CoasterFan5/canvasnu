@@ -10,7 +10,8 @@
     "format": "npx nx run-many -t format",
     "studio": "npx nx run database:studio",
     "db:generate": "dotenvx run -- pnpm --filter \"./packages/database/\" run generate",
-    "db:migrate": "dotenvx run -- pnpm --filter \"./packages/database/\" run migrate"
+    "db:migrate": "dotenvx run -- pnpm --filter \"./packages/database/\" run migrate",
+    "db:studio": "dotenvx run -- pnpm --filter \"./packages/database/\" run studio"
   },
   "keywords": [],
   "author": "",

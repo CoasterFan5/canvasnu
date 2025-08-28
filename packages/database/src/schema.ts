@@ -35,18 +35,24 @@ export const sessionTable = pgTable("session", {
   userId: integer(),
 });
 
-export const coursesTable = pgTable("courses", {
-  courseId: serial("id").primaryKey(),
-  ownerId: integer().notNull(),
-  domain: varchar({ length: 256 }).notNull(),
-  externalId: integer("externalId").notNull(),
-  name: varchar({ length: 256 }).notNull(),
-  nickname: varchar({ length: 256 }),
-  image: varchar({ length: 2048 }),
-  color: varchar({ length: 32 }),
-  hidden: boolean(),
-  currentGrade: doublePrecision(),
-});
+export const coursesTable = pgTable(
+  "courses",
+  {
+    courseId: serial("id").primaryKey(),
+    ownerId: integer().notNull(),
+    domain: varchar({ length: 256 }).notNull(),
+    externalId: integer("externalId").notNull(),
+    name: varchar({ length: 256 }).notNull(),
+    nickname: varchar({ length: 256 }),
+    image: varchar({ length: 2048 }),
+    color: varchar({ length: 32 }),
+    hidden: boolean(),
+    currentGrade: doublePrecision(),
+  },
+  (t) => [
+    unique("externalCompositeIdCourses").on(t.ownerId, t.externalId, t.domain),
+  ],
+);
 
 export const assignmentTable = pgTable(
   "assignments",

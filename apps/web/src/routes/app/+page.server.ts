@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { db, isNotNull } from 'database';
 import { assignmentTable, coursesTable } from 'database';
 import { and, asc, eq, isNull, or } from 'database';
-import { dataManagers } from 'canvas';
 import { logManager } from '$lib/server/logManager/logManager';
 
 const TEN_MINUTES = 10 * 60 * 1000;
@@ -19,16 +18,18 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		throw redirect(307, '/onboarding');
 	}
 
-	const courses = dataManagers.syncCourseData(user);
-
 	if (!user.lastAssignmentSync || user.lastAssignmentSync?.getTime() < Date.now() - SIXTY_MINUTES) {
 		logManager.log({
 			type: 'warn',
-			message: 'Planner just synced from web app',
+			message: 'Planner just tried sync from web app',
 			alert: false
 		});
-		await dataManagers.syncPlanner(user);
 	}
+
+	const courses = db
+		.select()
+		.from(coursesTable)
+		.where(and(eq(coursesTable.ownerId, user.id)));
 
 	const assignmnets = db
 		.select()

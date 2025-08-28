@@ -12,29 +12,25 @@
 <div class="wrap">
 	<div class="left">
 		<div class="upcomingAssignments">
-			<span class="header"><h4>Upcoming</h4></span>
+			<span class="header"><h4>Upcoming ({data.upComingAssignments.length})</h4></span>
 			{#each data.upComingAssignments as assignment}
-				<a
-					class="assignment"
-					target="_blank"
-					href="https://{data.canvasDomain}{assignment.externalUrl}"
-				>
-					<div>{assignment.name}</div>
-					<div>{dayjs(assignment.dueDate).format('MMM D')}</div>
-				</a>
+				{#if assignment.externalUrl}
+					<a class="assignment" target="_blank" href={assignment.externalUrl}>
+						<div>{assignment.name}</div>
+						<div>{dayjs(assignment.dueDate).format('MMM D')}</div>
+					</a>
+				{/if}
 			{/each}
 		</div>
 		<div class="upcomingAssignments">
-			<span class="header"><h4>All Assignments</h4></span>
+			<span class="header"><h4>All Assignments {data.allAssignments.length}</h4></span>
 			{#each data.allAssignments as assignment}
-				<a
-					class="assignment"
-					target="_blank"
-					href="https://{data.canvasDomain}{assignment.externalUrl}"
-				>
-					<div>{assignment.name}</div>
-					<div>{dayjs(assignment.dueDate).format('MMM D')}</div>
-				</a>
+				{#if assignment.externalUrl}
+					<a class="assignment" target="_blank" href={assignment.externalUrl}>
+						<div>{assignment.name}</div>
+						<div>{dayjs(assignment.dueDate).format('MMM D')}</div>
+					</a>
+				{/if}
 			{/each}
 		</div>
 	</div>
