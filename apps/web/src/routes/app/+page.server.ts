@@ -29,7 +29,12 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	const courses = db
 		.select()
 		.from(coursesTable)
-		.where(and(eq(coursesTable.ownerId, user.id)));
+		.where(
+			and(
+				eq(coursesTable.ownerId, user.id),
+				or(eq(coursesTable.hidden, false), isNull(coursesTable.hidden))
+			)
+		);
 
 	const assignmnets = db
 		.select()
