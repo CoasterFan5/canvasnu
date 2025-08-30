@@ -108,8 +108,7 @@ setInterval(async () => {
               grade: 0,
               submitted:
                 assignment.has_submitted_submissions ||
-                assignment.locked_for_user ||
-                assignment.graded_submissions_exist,
+                assignment.locked_for_user,
               description: assignment.description,
             })
             .onConflictDoUpdate({
@@ -123,8 +122,7 @@ setInterval(async () => {
                 grade: 0,
                 submitted:
                   assignment.has_submitted_submissions ||
-                  assignment.locked_for_user ||
-                  assignment.graded_submissions_exist,
+                  assignment.locked_for_user,
                 courseId: newCourse[0].courseId,
                 description: assignment.description,
               },
